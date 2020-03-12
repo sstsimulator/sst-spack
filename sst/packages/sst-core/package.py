@@ -7,8 +7,10 @@ from spack import *
 
 
 class SstCore(AutotoolsPackage):
-    """Kokkos implements a programming model in C++ for writing performance
-    portable applications targeting all major HPC platforms."""
+    """The Structural Simulation Toolkit (SST) core
+       provides a parallel discrete event simulation (PDES)
+       framework for performing architecture simulations
+       of existing and proposed HPC systems"""
 
     homepage = "https://github.com/sstsimulator"
     git      = "https://github.com/sstsimulator/sst-core.git"
