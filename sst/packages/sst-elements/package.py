@@ -26,6 +26,9 @@ class SstElements(AutotoolsPackage):
     variant("dramsim2",  default=False, description="Build with DRAMSim2 support")
     variant("nvdimmsim", default=False, description="Build with NVDimmSim support")
     variant("hybridsim", default=False, description="Build with HybridSim support")
+    variant("goblin",    default=False, description="Build with GoblinHMCSim support")
+    variant("hbm",       default=False, description="Build with HBM DRAMSim2 support")
+    variant("ramulator", default=False, description="Build with Ramulator support")
 
     depends_on("python")
     depends_on("sst-core")
@@ -34,12 +37,15 @@ class SstElements(AutotoolsPackage):
     depends_on("dramsim2@2.2",   when="+dramsim2")
     depends_on("hybridsim@2.0",  when="+hybridsim")
     depends_on("nvdimmsim@2.0",  when="+nvdimmsim")
+    depends_on("goblin-hmc-sim", when="+goblin")
+    depends_on("ramulator@sst",  when="+ramulator")
+    depends_on("hbm-dramsim2",   when="+hbm")
 
     #normally wouldn't need to specify indirect deps
     #but we do in this case so they are available in the spec
     depends_on("dramsim2@2.2",   when="+hybridsim")
     depends_on("nvdimmsim@2.0",  when="+hybridsim")
-    
+
     @when('@devel')
     @when('@master')
     def autoreconf(self, spec, prefix):
@@ -59,6 +65,15 @@ class SstElements(AutotoolsPackage):
 
       if "+hybridsim" in self.spec:
         args.append("--with-hybridsim=%s" % self.spec["hybridsim"].prefix)
+
+      if "+goblin" in self.spec:
+        args.append("--with-goblin-hmcsim=%s" % self.spec["goblin-hmc-sim"].prefix)
+
+      if "+hbm" in self.spec:
+        args.append("--with-hbmdramsim=%s" % self.spec["hbm-dramsim2"].prefix)
+
+      if "+ramulator" in self.spec:
+        args.append("--with-ramulator=%s" % self.spec["ramulator"].prefix)
 
       args.append("--with-sst-core=%s" % self.spec["sst-core"].prefix)
       return args
