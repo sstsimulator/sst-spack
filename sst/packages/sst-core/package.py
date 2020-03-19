@@ -20,17 +20,31 @@ class SstCore(AutotoolsPackage):
     version('devel',   branch='devel')
     version('master',  branch='master', preferred=True)
 
-    variant("pdes",   default=True, description="Build support for parallel discrete event simulation")
-    variant("zoltan", default=False, description="Use Zoltan for partitioning parallel runs")
-    variant("hdf5",   default=False, description="Build support for HDF5 statistic output")
-    variant("zlib",   default=False, description="Build support for ZLIB compression")
+    variant("pdes-mpi",default=True, description="Build support for parallel discrete event simulation")
+    variant("zoltan",  default=False, description="Use Zoltan for partitioning parallel runs")
+    variant("hdf5",    default=False, description="Build support for HDF5 statistic output")
+    variant("zlib",    default=False, description="Build support for ZLIB compression")
 
     depends_on("python")
-    depends_on("mpi", when="+pdes")
+    depends_on("mpi", when="+pdes-mpi")
     depends_on("zoltan", when="+zoltan")
+
+    depends_on('autoconf@1.68:', type='build', when='@devel')
+    depends_on('automake@1.11.1:', type='build', when='@devel')
+    depends_on('libtool@1.2.4:', type='build', when='@devel')
+    depends_on('m4', type='build', when='@devel')
+    depends_on('autoconf@1.68:', type='build', when='@master')
+    depends_on('automake@1.11.1:', type='build', when='@master')
+    depends_on('libtool@1.2.4:', type='build', when='@master')
+    depends_on('m4', type='build', when='@master')
+
+    # force out-of-source builds
+    build_directory = 'spack-build'
     
-    @when('@devel')
-    @when('@master')
+    #this is not working with multiple decorators
+    #TODO: make @when restrictions work
+    #@when('@devel')
+    #@when('@master')
     def autoreconf(self, spec, prefix):
         bash = which('bash')
         bash('autogen.sh')
@@ -44,11 +58,14 @@ class SstCore(AutotoolsPackage):
       if "+zlib" in self.spec:
         args.append("--with-zlib=%s" % self.spec["zlib"].prefix)
 
-      if "+pdes" in self.spec:
+      if "+pdes-mpi" in self.spec:
         args.append("--enable-mpi")
+        env['CC'] = spec['mpi'].mpicc
+        env['CXX'] = spec['mpi'].mpicxx
+        env['F77'] = spec['mpi'].mpif77
+        env['FC'] = spec['mpi'].mpifc
       else:
         args.append("--disable-mpi")
 
       args.append("--with-python=%s" % self.spec["python"].prefix)
-
       return args

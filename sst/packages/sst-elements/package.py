@@ -32,6 +32,8 @@ class SstElements(AutotoolsPackage):
 
     depends_on("python")
     depends_on("sst-core")
+    depends_on("sst-core@devel", when="@devel")
+    depends_on("sst-core@master", when="@master")
 
     depends_on("intel-pin@2.14", when="+pin")
     depends_on("dramsim2@2.2",   when="+dramsim2")
@@ -46,14 +48,34 @@ class SstElements(AutotoolsPackage):
     depends_on("dramsim2@2.2",   when="+hybridsim")
     depends_on("nvdimmsim@2.0",  when="+hybridsim")
 
-    @when('@devel')
-    @when('@master')
+    depends_on('autoconf@1.68:', type='build', when='@devel')
+    depends_on('automake@1.11.1:', type='build', when='@devel')
+    depends_on('libtool@1.2.4:', type='build', when='@devel')
+    depends_on('m4', type='build', when='@devel')
+    depends_on('autoconf@1.68:', type='build', when='@master')
+    depends_on('automake@1.11.1:', type='build', when='@master')
+    depends_on('libtool@1.2.4:', type='build', when='@master')
+    depends_on('m4', type='build', when='@master')
+
+    # force out-of-source builds
+    build_directory = 'spack-build'
+
+    #multiple decorators is not working
+    #TODO: make @when restrictions on this
+    #@when('@devel')
+    #@when('@master')
     def autoreconf(self, spec, prefix):
-        bash = which('bash')
-        bash('autogen.sh')
+      bash = which('bash')
+      bash('autogen.sh')
 
     def configure_args(self):
       args = []
+      if '+pdes-mpi' in self.spec["sst-core"]:
+        env['CC'] = spec['mpi'].mpicc
+        env['CXX'] = spec['mpi'].mpicxx
+        env['F77'] = spec['mpi'].mpif77
+        env['FC'] = spec['mpi'].mpifc
+
       if "+pin" in self.spec:
         args.append("--with-pin=%s" % self.spec["intel-pin"].prefix)
 
