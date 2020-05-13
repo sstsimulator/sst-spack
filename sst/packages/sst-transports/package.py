@@ -1,4 +1,4 @@
-# Copyright 2013-2018 Lawrence Livermore National Security, LLC and other
+# Copyright 2013-2020 Lawrence Livermore National Security, LLC and other
 # Spack Project Developers. See the top-level COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
@@ -11,13 +11,15 @@ class SstTransports(CMakePackage):
        that run in the simulator"""
 
     homepage = "https://github.com/sstsimulator"
-    git      = "https://github.com/jjwilke/sst-transports.git"
+    git = "https://github.com/jjwilke/sst-transports.git"
 
-    version('master',  branch='master', preferred=True)
+    maintainers = ['jjwilke']
+
+    version('master',  branch='master')
 
     depends_on("sst-macro")
 
     def cmake_args(self):
-      args = []
-      args.append("-DSSTMacro_ROOT=%s" % self.spec["sst-macro"].prefix)
-      return args
+        args = []
+        args.append("-DSSTMacro_ROOT=%s" % self.spec["sst-macro"].prefix)
+        return args
