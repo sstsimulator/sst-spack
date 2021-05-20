@@ -137,7 +137,7 @@ source myenv.sh
 ## Configuring Default Spack Packages
 Spack assumes nothing is available on your system, including even basic utilities like Perl and M4.
 This leads to Spack "bootstrapping" for each new install (and each compiler!) many, many packages.
-It is recommended to set up a `packages.yaml` file in a `$HOME.spack` folder that identifies your default local packages.
+It is recommended to set up a `packages.yaml` file in a `$HOME/.spack` folder that identifies your default local packages.
 Below is an example file with the most important packages for efficient SST development:
 ````
 packages:
