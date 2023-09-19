@@ -2,9 +2,7 @@
 
 # Structural Simulation Toolkit (SST) Spack Packages
 
-#### Copyright (c) 2009-2018, Sandia National Laboratories
-owned subsidiary of Honeywell International, Inc., for the U.S. Department of
-Energy's National Nuclear Security Administration under contract DE-NA0003525.
+#### Copyright (c) 2009-2023, National Technology and Engineering Solutions of Sandia, LLC (NTESS)
 
 ## Basic Usage
 Make sure you have downloaded [Spack](https://github.com/spack/spack) and added it to your path.
