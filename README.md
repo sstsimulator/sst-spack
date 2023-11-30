@@ -84,7 +84,7 @@ Spack provides the `dev-build` feature for building and installing from a custom
 For example:
 ````
 > git clone git@github.com:sstsimulator/sst-core.git -b devel src
-> spack dev-build -d src sst-core@devel +pdes-mpi 
+> spack dev-build -d src sst-core@devel +pdes-mpi
 ````
 is equivalent to just running
 ````
@@ -293,4 +293,3 @@ o | | | | | | | | | | | | |  zlib
     o  expat
     o  libbsd
 ````
-
