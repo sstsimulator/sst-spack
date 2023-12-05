@@ -10,15 +10,19 @@ jobs:
   install-spack:
     runs-on: ubuntu-latest
     name: Within Spack version ${{ matrix.version }}
-    matrix:
-      - version:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+        version:
           - '13.1.0'
     steps:
       - uses: actions/checkout@v4
       - name: Install Spack
         uses: vsoch/spack-package-action/install@main
       - name: Install sst-core, sst-elements, and sst-macro
-        runs: |
+        run: |
           spack env create sst
           spack env activate sst
           spack add sst-core@${{ matrix.version }}
