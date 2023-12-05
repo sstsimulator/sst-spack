@@ -20,12 +20,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Spack
-        uses: vsoch/spack-package-action/install@main
+        uses: berquist/spack-package-action/install@8-add-spack-to-path
       - name: Install sst-core, sst-elements, and sst-macro
         run: |
           echo "PATH: ${PATH}"
           echo "GITHUB_PATH: ${GITHUB_PATH}"
-          [[ -f "${GITHUB_PATH}" ]] && cat "${GITHUB_PATH}"
+          [[ -n "${GITHUB_PATH}" ]] && cat "${GITHUB_PATH}"
           spack env create sst
           spack env activate sst
           spack add sst-core@${{ matrix.version }}
