@@ -19,8 +19,14 @@ jobs:
           - '13.1.0'
     steps:
       - uses: actions/checkout@v4
-      - name: Install Spack
-        uses: berquist/spack-package-action/install@8-add-spack-to-path
+      - name: Clone Spack
+        uses: actions/checkout@v4
+        with:
+          repository: spack/spack
+          path: /opt/spack
+      - name: Add Spack to PATH
+        run: |
+          echo /opt/spack/bin >> "${GITHUB_PATH}"
       - name: Install sst-core, sst-elements, and sst-macro
         run: |
           echo "PATH: ${PATH}"
