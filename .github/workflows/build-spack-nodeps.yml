@@ -1,0 +1,16 @@
+---
+name: Build SST within Spack
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+  push:
+
+jobs:
+  install-spack:
+    runs-on: ubuntu-latest
+    name: Install Spack
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Spack
+        uses: vsoch/spack-package-action/install@main
