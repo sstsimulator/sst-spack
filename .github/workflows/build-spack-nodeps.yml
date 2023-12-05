@@ -9,7 +9,7 @@ on:
 jobs:
   install-spack:
     runs-on: ubuntu-latest
-    name: Within Spack version ${{ matrix.version }}
+    name: Within Spack version:${{ matrix.version }} / os:${{ matrix.os }}
     strategy:
       matrix:
         os:
@@ -23,6 +23,9 @@ jobs:
         uses: vsoch/spack-package-action/install@main
       - name: Install sst-core, sst-elements, and sst-macro
         run: |
+          echo "PATH: ${PATH}"
+          echo "GITHUB_PATH: ${GITHUB_PATH}"
+          [[ -f "${GITHUB_PATH}" ]] && cat "${GITHUB_PATH}"
           spack env create sst
           spack env activate sst
           spack add sst-core@${{ matrix.version }}
