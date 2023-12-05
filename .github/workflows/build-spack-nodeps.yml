@@ -29,12 +29,7 @@ jobs:
           echo "${PWD}/spack/bin" >> "${GITHUB_PATH}"
       - name: Install sst-core, sst-elements, and sst-macro
         run: |
-          echo "PATH: ${PATH}"
-          echo "GITHUB_PATH: ${GITHUB_PATH}"
-          [[ -n "${GITHUB_PATH}" ]] && cat "${GITHUB_PATH}"
-          spack env create sst
-          spack env activate sst
-          spack add sst-core@${{ matrix.version }}
-          spack add sst-elements@${{ matrix.version }}
-          spack add sst-macro@${{ matrix.version }}
-          spack install
+          spack -e . add sst-core@${{ matrix.version }}
+          spack -e . add sst-elements@${{ matrix.version }}
+          spack -e . add sst-macro@${{ matrix.version }}
+          spack -e . install
