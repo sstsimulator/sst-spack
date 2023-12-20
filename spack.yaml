@@ -1,0 +1,9 @@
+---
+spack:
+  view: my_view
+  config:
+    install_tree:
+      root: /opt/spack
+      padded_length: 128
+  mirrors:
+    local-buildcache: oci://ghcr.io/sstsimulator/spack-buildcache

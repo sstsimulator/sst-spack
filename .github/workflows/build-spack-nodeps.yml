@@ -8,8 +8,8 @@ on:
 
 jobs:
   install-spack:
-    runs-on: ubuntu-latest
-    name: Within Spack version:${{ matrix.version }} / os:${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    name: version:${{ matrix.version }} / os:${{ matrix.os }}
     strategy:
       matrix:
         os:
@@ -17,6 +17,8 @@ jobs:
           - macos-latest
         version:
           - '13.1.0'
+    permissions:
+      packages: write
     steps:
       - uses: actions/checkout@v4
       - name: Clone Spack
@@ -27,11 +29,28 @@ jobs:
       - name: Add Spack to PATH
         run: |
           echo "${PWD}/spack/bin" >> "${GITHUB_PATH}"
+      - name: Print Spack configuration
+        run: |
+          spack config blame config
       - name: Install sst-core, sst-elements, and sst-macro
         run: |
-          spack env create sst
-          eval "$(spack env activate --sh sst)"
-          spack add sst-core@${{ matrix.version }}
-          spack add sst-elements@${{ matrix.version }}
-          spack add sst-macro@${{ matrix.version }}
-          spack install
+          spack env activate .
+          # spack add sst-core@${{ matrix.version }}
+          # spack add sst-elements@${{ matrix.version }}
+          # spack add sst-macro@${{ matrix.version }}
+          spack add git
+          spack install --fail-fast
+      - name: Push packages and update index
+        run: |
+          mirror_name="local-buildcache"
+          spack env activate .
+          spack mirror set \
+              --push \
+              --oci-username ${{ github.actor }} \
+              --oci-password "${{ secrets.GITHUB_TOKEN }}" \
+              "${mirror_name}"
+          spack buildcache push \
+              --unsigned \
+              --update-index \
+              "${mirror_name}"
+        if: ${{ !cancelled() }}
