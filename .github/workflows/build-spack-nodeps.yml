@@ -42,7 +42,7 @@ jobs:
           spack install --fail-fast
       - name: Push packages and update index
         run: |
-          mirror_name="local-buildcache"
+          mirror_name="github-container-registry"
           spack env activate .
           spack mirror set \
               --push \
