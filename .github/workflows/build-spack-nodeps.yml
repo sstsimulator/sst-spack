@@ -34,7 +34,7 @@ jobs:
           spack config blame config
       - name: Install sst-core, sst-elements, and sst-macro
         run: |
-          spack env activate .
+          eval "$(spack env activate --sh .)"
           # spack add sst-core@${{ matrix.version }}
           # spack add sst-elements@${{ matrix.version }}
           # spack add sst-macro@${{ matrix.version }}
@@ -43,6 +43,7 @@ jobs:
       - name: Push packages and update index
         run: |
           mirror_name="github-container-registry"
+          eval "$(spack env activate --sh .)"
           spack env activate .
           spack mirror set \
               --push \
