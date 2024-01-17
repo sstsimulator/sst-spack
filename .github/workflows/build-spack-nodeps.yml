@@ -26,15 +26,15 @@ jobs:
         with:
           repository: spack/spack
           path: spack
-      - name: Add Spack to PATH
+      - name: Add Spack to PATH and set mirror name
         run: |
           echo "${PWD}/spack/bin" >> "${GITHUB_PATH}"
+          echo "mirror_name=github-container-registry" >> "${GITHUB_ENV}"
       - name: Print Spack configuration
         run: |
           spack config blame config
       - name: Set credentials for mirror
         run: |
-          echo "mirror_name=github-container-registry" >> "${GITHUB_ENV}"
           eval "$(spack env activate --sh .)"
           spack mirror set \
               --oci-username ${{ github.actor }} \
