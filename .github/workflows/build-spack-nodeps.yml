@@ -51,7 +51,7 @@ jobs:
       - name: Push packages and update index
         run: |
           eval "$(spack env activate --sh .)"
-          spack buildcache push \
+          spack -d buildcache push \
               --unsigned \
               --update-index \
               "${mirror_name}"
