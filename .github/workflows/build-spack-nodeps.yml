@@ -33,6 +33,7 @@ jobs:
       - name: Print Spack configuration
         run: |
           spack config blame config
+          spack debug report
       - name: Set credentials for mirror
         run: |
           eval "$(spack env activate --sh .)"
