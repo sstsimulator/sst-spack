@@ -44,7 +44,6 @@ jobs:
         run: |
           mirror_name="github-container-registry"
           eval "$(spack env activate --sh .)"
-          spack env activate .
           spack mirror set \
               --push \
               --oci-username ${{ github.actor }} \
