@@ -32,6 +32,14 @@ jobs:
       - name: Print Spack configuration
         run: |
           spack config blame config
+      - name: Set credentials for mirror
+        run: |
+          echo "mirror_name=github-container-registry" >> "${GITHUB_ENV}"
+          eval "$(spack env activate --sh .)"
+          spack mirror set \
+              --oci-username ${{ github.actor }} \
+              --oci-password "${{ secrets.GITHUB_TOKEN }}" \
+              "${mirror_name}"
       - name: Install sst-core, sst-elements, and sst-macro
         run: |
           eval "$(spack env activate --sh .)"
@@ -42,13 +50,7 @@ jobs:
           spack install --fail-fast
       - name: Push packages and update index
         run: |
-          mirror_name="github-container-registry"
           eval "$(spack env activate --sh .)"
-          spack mirror set \
-              --push \
-              --oci-username ${{ github.actor }} \
-              --oci-password "${{ secrets.GITHUB_TOKEN }}" \
-              "${mirror_name}"
           spack buildcache push \
               --unsigned \
               --update-index \
