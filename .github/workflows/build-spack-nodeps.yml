@@ -38,7 +38,7 @@ jobs:
           # spack add sst-core@${{ matrix.version }}
           # spack add sst-elements@${{ matrix.version }}
           # spack add sst-macro@${{ matrix.version }}
-          spack add git
+          spack add perl
           spack install --fail-fast
       - name: Push packages and update index
         run: |
