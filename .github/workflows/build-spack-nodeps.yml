@@ -16,7 +16,8 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macos-latest
+          - macos-13
+          - macos-14
         version:
           - '13.1.0'
           - 'master'
@@ -24,6 +25,9 @@ jobs:
       packages: write
     steps:
       - uses: actions/checkout@v4
+      - name: Update system software
+        run: |
+          bash .github/workflows/install_os_deps.sh
       - name: Clone Spack
         uses: actions/checkout@v4
         with:
