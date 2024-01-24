@@ -5,11 +5,13 @@ name: Build SST within Spack
 on:
   pull_request:
   push:
+  schedule:
+    - cron: '15 2 * * 0'
 
 jobs:
   install-spack:
-    runs-on: ${{ matrix.os }}
     name: version:${{ matrix.version }} / os:${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os:
@@ -17,6 +19,7 @@ jobs:
           - macos-latest
         version:
           - '13.1.0'
+          - 'master'
     permissions:
       packages: write
     steps:
@@ -24,6 +27,7 @@ jobs:
       - name: Clone Spack
         uses: actions/checkout@v4
         with:
+          # Take the latest (develop) version.
           repository: spack/spack
           path: spack
       - name: Add Spack to PATH and set mirror name
@@ -44,10 +48,9 @@ jobs:
       - name: Install sst-core, sst-elements, and sst-macro
         run: |
           eval "$(spack env activate --sh .)"
-          # spack add sst-core@${{ matrix.version }}
-          # spack add sst-elements@${{ matrix.version }}
-          # spack add sst-macro@${{ matrix.version }}
-          spack add perl
+          spack add sst-core@${{ matrix.version }}
+          spack add sst-elements@${{ matrix.version }}
+          spack add sst-macro@${{ matrix.version }}
           spack install --fail-fast
       - name: Push packages and update index
         run: |
