@@ -10,9 +10,6 @@ if command -v brew; then
     # Problems with Python overwriting files in /usr/local/bin
     # brew update
     # brew upgrade
-    brew install automake
 elif command -v apt-get; then
     sudo apt-get -y --no-install-recommends update
-    sudo apt-get -y --no-install-recommends install \
-         libncurses-dev
 fi
