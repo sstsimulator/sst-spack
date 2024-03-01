@@ -22,6 +22,7 @@ jobs:
         version:
           - '13.1.0'
           - 'master'
+        fail-fast: false
     permissions:
       packages: write
     steps:
