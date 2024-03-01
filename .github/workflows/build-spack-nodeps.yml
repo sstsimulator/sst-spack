@@ -6,7 +6,8 @@ on:
   pull_request:
   push:
   schedule:
-    - cron: '15 2 * * 0'
+    # 0215 daily
+    - cron: '15 2 * * *'
 
 jobs:
   install-spack:
@@ -15,7 +16,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - ubuntu-latest
+          - ubuntu-22.04
           - macos-13
           - macos-14
         version:
@@ -59,8 +60,7 @@ jobs:
       - name: Push packages and update index
         run: |
           eval "$(spack env activate --sh .)"
-          spack -d buildcache push \
+          spack buildcache push \
               --unsigned \
               --update-index \
               "${mirror_name}"
-        if: ${{ !cancelled() }}
