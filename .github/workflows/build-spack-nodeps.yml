@@ -1,0 +1,67 @@
+---
+name: Build SST within Spack
+
+# yamllint disable-line rule:truthy
+on:
+  pull_request:
+  push:
+  schedule:
+    # 0215 daily
+    - cron: '15 2 * * *'
+
+jobs:
+  install-spack:
+    name: version:${{ matrix.version }} / os:${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-22.04
+          - macos-13
+          - macos-14
+        version:
+          - '13.1.0'
+          - 'master'
+      fail-fast: false
+    permissions:
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update system software
+        run: |
+          bash .github/workflows/install_os_deps.sh
+      - name: Clone Spack
+        uses: actions/checkout@v4
+        with:
+          # Take the latest (develop) version.
+          repository: spack/spack
+          path: spack
+      - name: Add Spack to PATH and set mirror name
+        run: |
+          echo "${PWD}/spack/bin" >> "${GITHUB_PATH}"
+          echo "mirror_name=github-container-registry" >> "${GITHUB_ENV}"
+      - name: Print Spack configuration
+        run: |
+          spack config blame config
+          spack debug report
+      - name: Set credentials for mirror
+        run: |
+          eval "$(spack env activate --sh .)"
+          spack mirror set \
+              --oci-username ${{ github.actor }} \
+              --oci-password "${{ secrets.GITHUB_TOKEN }}" \
+              "${mirror_name}"
+      - name: Install sst-core, sst-elements, and sst-macro
+        run: |
+          eval "$(spack env activate --sh .)"
+          spack add sst-core@${{ matrix.version }}
+          spack add sst-elements@${{ matrix.version }}
+          spack add sst-macro@${{ matrix.version }}
+          spack install --fail-fast --verbose
+      - name: Push packages and update index
+        run: |
+          eval "$(spack env activate --sh .)"
+          spack buildcache push \
+              --unsigned \
+              --update-index \
+              "${mirror_name}"
