@@ -40,6 +40,9 @@ jobs:
         run: |
           echo "${PWD}/spack/bin" >> "${GITHUB_PATH}"
           echo "mirror_name=github-container-registry" >> "${GITHUB_ENV}"
+      - name: Find compilers for Spack
+        run: |
+          spack compiler find --mixed-toolchain
       - name: Print Spack configuration
         run: |
           spack config blame config
