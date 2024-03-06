@@ -54,9 +54,12 @@ jobs:
       - name: Install sst-core, sst-elements, and sst-macro
         run: |
           eval "$(spack env activate --sh .)"
+          # workaround for 2.42 installation issues on macOS
+          spack add binutils@2.41
           spack add sst-core@${{ matrix.version }}
           spack add sst-elements@${{ matrix.version }}
           spack add sst-macro@${{ matrix.version }}
+          spack concretize --reuse --force
           spack install --fail-fast --verbose
       - name: Push packages and update index
         run: |
