@@ -61,7 +61,7 @@ jobs:
           # macro is causing problems on macOS
           # spack add sst-macro@${{ matrix.version }}
           spack concretize --reuse --force
-          spack install --fail-fast --verbose
+          spack install --fail-fast
       - name: Push packages and update index
         run: |
           eval "$(spack env activate --sh .)"
