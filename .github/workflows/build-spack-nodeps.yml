@@ -40,6 +40,9 @@ jobs:
         run: |
           echo "${PWD}/spack/bin" >> "${GITHUB_PATH}"
           echo "mirror_name=github-container-registry" >> "${GITHUB_ENV}"
+      - name: Find compilers for Spack
+        run: |
+          spack compiler find --mixed-toolchain
       - name: Print Spack configuration
         run: |
           spack config blame config
@@ -54,10 +57,14 @@ jobs:
       - name: Install sst-core, sst-elements, and sst-macro
         run: |
           eval "$(spack env activate --sh .)"
+          # workaround for 2.42 installation issues on macOS
+          spack add binutils@2.41
           spack add sst-core@${{ matrix.version }}
           spack add sst-elements@${{ matrix.version }}
-          spack add sst-macro@${{ matrix.version }}
-          spack install --fail-fast --verbose
+          # macro is causing problems on macOS
+          # spack add sst-macro@${{ matrix.version }}
+          spack concretize --reuse --force
+          spack install --fail-fast
       - name: Push packages and update index
         run: |
           eval "$(spack env activate --sh .)"

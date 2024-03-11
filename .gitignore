@@ -1,2 +1,6 @@
 *.pyc
 .spack-env/
+\#spack.yaml#
+._sst-spack-view/
+spack.lock
+sst-spack-view
