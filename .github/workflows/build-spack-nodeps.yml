@@ -20,7 +20,7 @@ jobs:
           - macos-13
           - macos-14
         version:
-          - '13.1.0'
+          - '14.0.0'
           - 'master'
       fail-fast: false
     permissions:
