@@ -61,8 +61,7 @@ jobs:
           spack add binutils@2.41
           spack add sst-core@${{ matrix.version }}
           spack add sst-elements@${{ matrix.version }}
-          # macro is causing problems on macOS
-          # spack add sst-macro@${{ matrix.version }}
+          spack add sst-macro@${{ matrix.version }}
           spack concretize --reuse --force
           spack install --fail-fast
       - name: Push packages and update index
