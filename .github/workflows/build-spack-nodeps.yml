@@ -16,11 +16,11 @@ jobs:
     strategy:
       matrix:
         os:
-          - ubuntu-22.04
+          - ubuntu-24.04
           - macos-13
           - macos-14
         version:
-          - '13.1.0'
+          - '14.1.0'
           - 'master'
       fail-fast: false
     permissions:
@@ -61,14 +61,6 @@ jobs:
           spack add binutils@2.41
           spack add sst-core@${{ matrix.version }}
           spack add sst-elements@${{ matrix.version }}
-          # macro is causing problems on macOS
-          # spack add sst-macro@${{ matrix.version }}
+          spack add sst-macro@${{ matrix.version }}
           spack concretize --reuse --force
           spack install --fail-fast
-      - name: Push packages and update index
-        run: |
-          eval "$(spack env activate --sh .)"
-          spack buildcache push \
-              --unsigned \
-              --update-index \
-              "${mirror_name}"

@@ -7,3 +7,4 @@ spack:
     github-container-registry:
       url: oci://ghcr.io/sstsimulator/sst-spack
       signed: false
+      autopush: true
