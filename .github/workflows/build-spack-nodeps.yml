@@ -64,10 +64,3 @@ jobs:
           spack add sst-macro@${{ matrix.version }}
           spack concretize --reuse --force
           spack install --fail-fast
-      - name: Push packages and update index
-        run: |
-          eval "$(spack env activate --sh .)"
-          spack buildcache push \
-              --unsigned \
-              --update-index \
-              "${mirror_name}"
