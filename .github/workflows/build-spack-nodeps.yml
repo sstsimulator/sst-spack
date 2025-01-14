@@ -28,13 +28,16 @@ jobs:
     permissions:
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
+        with:
+          persist-credentials: false
       - name: Update system software
         run: |
           bash .github/workflows/install_os_deps.sh
       - name: Clone Spack
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
         with:
+          persist-credentials: false
           # Take the latest (develop) version.
           repository: spack/spack
           path: spack
@@ -53,9 +56,11 @@ jobs:
         run: |
           eval "$(spack env activate --sh .)"
           spack mirror set \
-              --oci-username ${{ github.actor }} \
+              --oci-username "${GITHUB_ACTOR}" \
               --oci-password "${{ secrets.GITHUB_TOKEN }}" \
               "${mirror_name}"
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
       - name: Install sst-core, sst-elements, and sst-macro
         run: |
           eval "$(spack env activate --sh .)"
