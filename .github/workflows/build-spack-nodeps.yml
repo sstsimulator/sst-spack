@@ -9,6 +9,8 @@ on:
     # 0215 daily
     - cron: '15 2 * * *'
 
+permissions: {}
+
 jobs:
   install-spack:
     name: version:${{ matrix.version }} / os:${{ matrix.os }}
