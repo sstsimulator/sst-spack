@@ -70,6 +70,8 @@ jobs:
           spack add binutils@2.41
           spack add sst-core@${{ matrix.version }}
           spack add sst-elements@${{ matrix.version }}
-          spack add sst-macro@${{ matrix.version }}
+          if [[ "${{ matrix.version }}" != "13.1.0" ]] && [[ "$(uname)" != "Darwin" ]]; then
+              spack add sst-macro@${{ matrix.version }}
+          fi
           spack concretize --reuse --force
           spack install --fail-fast
