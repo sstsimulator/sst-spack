@@ -66,8 +66,6 @@ jobs:
       - name: Install sst-core, sst-elements, and sst-macro
         run: |
           eval "$(spack env activate --sh .)"
-          # workaround for 2.42 installation issues on macOS
-          spack add binutils@2.41
           spack add sst-core@${{ matrix.version }}
           spack add sst-elements@${{ matrix.version }}
           if ! [[ "${{ matrix.version }}" == "13.1.0" ]] && [[ "$(uname)" == "Darwin" ]]; then
