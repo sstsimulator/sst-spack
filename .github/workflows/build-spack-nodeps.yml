@@ -66,8 +66,7 @@ jobs:
       - name: Install sst-core, sst-elements, and sst-macro
         run: |
           eval "$(spack env activate --sh .)"
-          spack add sst-core@${{ matrix.version }}
-          spack add sst-elements@${{ matrix.version }}
+          spack add sst-elements@${{ matrix.version }} ^sst-core@${{ matrix.version }}
           if ! [[ "${{ matrix.version }}" == "13.1.0" ]] && [[ "$(uname)" == "Darwin" ]]; then
               spack add sst-macro@${{ matrix.version }}
           fi
