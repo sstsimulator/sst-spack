@@ -9,6 +9,8 @@ on:
     # 0215 daily
     - cron: '15 2 * * *'
 
+permissions: {}
+
 jobs:
   install-spack:
     name: version:${{ matrix.version }} / os:${{ matrix.os }}
@@ -20,21 +22,27 @@ jobs:
           - macos-13
           - macos-14
         version:
+          - '13.1.0'
+          - '14.0.0'
           - '14.1.0'
           - 'master'
       fail-fast: false
     permissions:
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
+        with:
+          persist-credentials: false
       - name: Update system software
         run: |
           bash .github/workflows/install_os_deps.sh
       - name: Clone Spack
-        uses: actions/checkout@v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
         with:
+          persist-credentials: false
           # Take the latest (develop) version.
-          repository: spack/spack
+          repository: berquist/spack
+          ref: sst-core-fix-curses-linkage
           path: spack
       - name: Add Spack to PATH and set mirror name
         run: |
@@ -51,16 +59,17 @@ jobs:
         run: |
           eval "$(spack env activate --sh .)"
           spack mirror set \
-              --oci-username ${{ github.actor }} \
+              --oci-username "${GITHUB_ACTOR}" \
               --oci-password "${{ secrets.GITHUB_TOKEN }}" \
               "${mirror_name}"
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
       - name: Install sst-core, sst-elements, and sst-macro
         run: |
           eval "$(spack env activate --sh .)"
-          # workaround for 2.42 installation issues on macOS
-          spack add binutils@2.41
-          spack add sst-core@${{ matrix.version }}
-          spack add sst-elements@${{ matrix.version }}
-          spack add sst-macro@${{ matrix.version }}
-          spack concretize --reuse --force
-          spack install --fail-fast
+          spack add sst-elements@${{ matrix.version }} ^sst-core@${{ matrix.version }}
+          if ! [[ "${{ matrix.version }}" == "13.1.0" ]] && [[ "$(uname)" == "Darwin" ]]; then
+              spack add sst-macro@${{ matrix.version }}
+          fi
+          spack concretize --deprecated --fresh --force
+          spack install -y --fail-fast
