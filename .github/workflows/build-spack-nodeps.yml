@@ -41,7 +41,8 @@ jobs:
         with:
           persist-credentials: false
           # Take the latest (develop) version.
-          repository: spack/spack
+          repository: berquist/spack
+          ref: sst-core-fix-curses-linkage
           path: spack
       - name: Add Spack to PATH and set mirror name
         run: |
@@ -70,5 +71,5 @@ jobs:
           if ! [[ "${{ matrix.version }}" == "13.1.0" ]] && [[ "$(uname)" == "Darwin" ]]; then
               spack add sst-macro@${{ matrix.version }}
           fi
-          spack concretize --reuse --force
-          spack install --fail-fast
+          spack concretize --deprecated --fresh --force
+          spack install -y --fail-fast
