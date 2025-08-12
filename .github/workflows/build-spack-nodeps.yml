@@ -26,12 +26,12 @@ jobs:
     permissions:
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Update system software
         run: |
           bash .github/workflows/install_os_deps.sh
       - name: Clone Spack
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           # Take the latest (develop) version.
           repository: spack/spack
