@@ -16,9 +16,10 @@ jobs:
     strategy:
       matrix:
         os:
+          # Don't update this one to 26.04
           - ubuntu-24.04
-          - macos-13
-          - macos-14
+          - macos-15
+          - macos-26
         version:
           - '14.1.0'
           - 'master'
@@ -26,13 +27,16 @@ jobs:
     permissions:
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - name: Update system software
         run: |
           bash .github/workflows/install_os_deps.sh
       - name: Clone Spack
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
+          persist-credentials: false
           # Take the latest (develop) version.
           repository: spack/spack
           path: spack
