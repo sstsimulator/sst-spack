@@ -33,7 +33,3 @@ repos:
     rev: "v0.10.0.1"
     hooks:
       - id: shellcheck
-  # - repo: https://github.com/rhysd/actionlint
-  #   rev: v1.6.26
-  #   hooks:
-  #     - id: actionlint
